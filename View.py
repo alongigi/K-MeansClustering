@@ -61,7 +61,7 @@ class View():
         self.file_entry.insert(0, file_path)
 
     def pre_process(self):
-        pass
+        self.controller.pre_proess()
 
     def cluster(self):
         self.controller.KMean(self.num_of_clusters_entry.get(), self.nums_of_runs_entry.get())
