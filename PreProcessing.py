@@ -1,7 +1,5 @@
 import pandas as pd
 
-df = pd.read_excel('data.xlsx')
-
 """
     Filling the missing values (NA) with mean.
 
@@ -14,7 +12,6 @@ def fillMissingValuesWithMean(df):
     return df_without_missing_values
 
 
-df = fillMissingValuesWithMean(df)
 
 """
 Returns the mean of specific feature
@@ -53,6 +50,9 @@ def normalize(df):
 
     "For each feature in we normalize the data, except for those feature who are not numeric."
     for feature_name in df.columns:
+        if feature_name == "country":
+            continue
+
         try:
             mean = getFeatureMean(df, feature_name)
             std = getFeatureSTD(df, feature_name)
@@ -67,89 +67,45 @@ def normalize(df):
 
 
 def kibuzData(df):
-    # The keys of the dictionary will be the countries names, and their values will contain sum for each feature
-    # for example if the sum of the feature 'Life Ladder' will be 2000 then in index 4 for example in the value array
-    # will be 2000.
-    # Moreover, the first index will contain the number of instances of the same country
-    # For example, if the country 'Israel' appeared three time in the original df the in index 0 will be the number 3.
-    data_frame_data = {}
+    "Makes a copy of the data frame."
+    result = df.copy()
 
-    number_of_rows = getNumberOfRows(df, "country") - 1
-    # Contains the names of all features
-    feature_names = list(df.columns.values)
-
-    # Running index which represent the current row in the dataframe
-    current_row = 0
-
-    # The purpose of this while is to collect each data for each country and put it in the 'data_frame_data' as value,
-    # except for year data
-    while current_row < number_of_rows:
-        current_country_name = df["country"][current_row]
-
-        # Creates a new array if the country name is not exists in the keys
-        if not current_country_name in data_frame_data:
-            data_frame_data[current_country_name] = [0] * (len(feature_names) - 1)
-
-        # updating the number of instances of specific country.
-        data_frame_data[current_country_name][0] += 1
-
-        feature_index = 1
-        for feature_name in feature_names:
-            if feature_name in ['country', 'year']:
-                continue
-
-            data_frame_data[current_country_name][feature_index] += df[feature_name][current_row]
-            feature_index += 1
-
-        current_row += 1
-
-    return create_new_data_frame(data_frame_data, feature_names)
-
-
-def create_new_data_frame(data_frame_data, feature_names):
+    """ Dictionary which the key is the country and the value is array -
+    the first part of table is the number of values and the second is the sum of year
+    for example Israel -> [2, 4000] --- there are two values of the country israel with both year 2000
     """
-    Responsible for making a new data frame based on the given data and feature names
+    dict = {}
 
-    :param data_frame_data:
-    :param feature_names:
-    :return:
-    """
+    index = getNumberOfRows(result, "country") - 1
 
-    # Will contain many hash tables. Each of the hash table will represent a row in the new data frame.
-    new_data_frame_array = []
+    while index >= 0:
+        country_name = df["country"][index]
 
-    for feature in data_frame_data:
-        new_data_frame_row_data = data_frame_data[feature]
-        for i in range(len(new_data_frame_row_data)):
-            # The first index consist the number of instances, something which need to be passed because we will
-            # use it to calculate the country's features average.
-            if i == 0:
-                continue
-            new_data_frame_row_data[i] = new_data_frame_row_data[i] / new_data_frame_row_data[0]
-        new_data_frame_row_data[0] = feature
+        if not country_name in dict:
+            dict[country_name] = [0] * 2
 
-        current_row = 0
-        # Represents a new row in the new data frame.
-        new_data_frame_row = {}
-        for current_feature in feature_names:
-            if current_feature == "year":
-                continue
+        dict[country_name][0] += 1
+        dict[country_name][1] += df["year"][index]
 
-            new_data_frame_row[current_feature] = new_data_frame_row_data[current_row]
-            current_row += 1
+        index -= 1
 
-        new_data_frame_array.append(new_data_frame_row)
+    index = getNumberOfRows(result, "country") - 1
 
-    # Creating a new data frame based on the calculated data before
-    new_df = pd.DataFrame(new_data_frame_array)
+    newValues = []
 
-    return new_df
+    while (index >= 0):
+        country_name = result["country"][index]
+
+        newValues.append(dict[country_name][1] / dict[country_name][0])
+
+        index -= 1
+
+    df["country"] = newValues
+
+    return df
 
 
 def getNumberOfRows(df, feature):
     return df[feature].count()
 
 
-new_df = kibuzData(df)
-print new_df
-# print(kibuzData(df))

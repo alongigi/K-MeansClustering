@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-import matplotlib as plt
+import matplotlib.pyplot as plt
 from scipy.stats import mode
 import PreProcessing
 import KMeansClass
@@ -21,11 +21,18 @@ class Controller():
 
         df1 = self.df[['Generosity']]
         df2 = self.df[['Social support']]
+        plt.scatter(df1, df2, c=self.x, label="skiscat")
+        plt.xlabel('Generosity')
+        plt.ylabel('Social support')
+        plt.title('title')
+        plt.legend()
+        plt.show()
 
     def set_path(self, path):
         self.df = pd.read_excel(path)
 
     def pre_proess(self):
         self.df = PreProcessing.fillMissingValuesWithMean(self.df)
-        self.df = PreProcessing.kibuzData(self.df)
         self.df = PreProcessing.normalize(self.df)
+        self.df = PreProcessing.kibuzData(self.df)
+        print(self.df)
