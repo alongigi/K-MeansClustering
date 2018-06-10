@@ -1,5 +1,3 @@
-import time
-
 from Controller import Controller
 from View import View
 

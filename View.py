@@ -2,10 +2,8 @@ import pickle
 # from tkinter import filedialog
 import os
 
-import time
 import tkFileDialog
 from Tkinter import Tk, Entry, Checkbutton, Button, HORIZONTAL, Label, StringVar, Toplevel, Scrollbar, VERTICAL, E, W
-from ttk import Progressbar, Treeview
 
 
 class View():
@@ -64,4 +62,4 @@ class View():
         self.controller.pre_process()
 
     def cluster(self):
-        self.controller.KMean(self.num_of_clusters_entry.get(), self.nums_of_runs_entry.get())
+        self.controller.algorithm(self.num_of_clusters_entry.get(), self.nums_of_runs_entry.get())
