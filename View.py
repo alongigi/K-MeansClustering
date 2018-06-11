@@ -1,16 +1,22 @@
 import pickle
 # from tkinter import filedialog
 import os
+import tkMessageBox
+
+import matplotlib.image as mpimg
+import matplotlib.pyplot as plt
+
 
 import tkFileDialog
-from Tkinter import Tk, Entry, Checkbutton, Button, HORIZONTAL, Label, StringVar, Toplevel, Scrollbar, VERTICAL, E, W
+from Tkinter import Tk, Entry, Checkbutton, Button, HORIZONTAL, Label, StringVar, Toplevel, Scrollbar, VERTICAL, E, W, \
+    Image
 
 
 class View():
     def __init__(self, controller):
         self.controller = controller
         self.root = Tk()
-        self.root.title("K-Means Clustering By: Anatoly and Alon")
+        self.root.title("K Means Clustering")
         self.file_entry = Entry(self.root)
         self.file_entry['width'] = 50
         self.nums_of_runs_entry = Entry(self.root)
@@ -49,17 +55,46 @@ class View():
         self.cluster_btn.grid(row=6, column=1)
 
     def data_browse_location(self):
-        '''
-        ask the carpus and stopwords directory path
-        '''
-        file_path = tkFileDialog.askopenfilename(initialdir="/", title="Select file",
+        try:
+            file_path = tkFileDialog.askopenfilename(initialdir="/", title="Select file",
                                                      filetypes=(("xlsx files", "*.xlsx"), ("all files", "*.*")))
-        self.controller.set_path(file_path)
-        self.file_entry.delete(0, len(self.file_entry.get()))
-        self.file_entry.insert(0, file_path)
+            self.controller.set_path(file_path)
+            self.file_entry.delete(0, len(self.file_entry.get()))
+            self.file_entry.insert(0, file_path)
+        except:
+            msg = """
+            You have to enter excel file.
+            """
+            self.pop_alert(msg)
 
     def pre_process(self):
         self.controller.pre_process()
+        msg = """
+        Preprocessing completed successfully!"
+        """
+        self.pop_alert(msg)
 
     def cluster(self):
-        self.controller.algorithm(self.num_of_clusters_entry.get(), self.nums_of_runs_entry.get())
+        try:
+            self.controller.algorithm(self.num_of_clusters_entry.get(), self.nums_of_runs_entry.get())
+            img = mpimg.imread('KMeansWorldMap.png')
+            plt.imshow(img)
+            plt.show()
+            img = mpimg.imread('Clustering.png')
+            plt.imshow(img)
+            plt.show()
+            if tkMessageBox.showinfo("K Means Clustering", "The classification processing completed successfully!"):
+                self.root.destroy()
+        except:
+            msg = """
+            Please enter only numbers in the 1-300.
+            """
+            self.pop_alert(msg)
+
+
+    def pop_alert(self, msg):
+        '''
+        display alert for upload file
+        '''
+        tkMessageBox.showinfo(message=msg)
+        pass
