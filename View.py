@@ -2,6 +2,7 @@ import pickle
 # from tkinter import filedialog
 import os
 import tkMessageBox
+from PIL import Image
 
 import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
@@ -10,6 +11,8 @@ import matplotlib.pyplot as plt
 import tkFileDialog
 from Tkinter import Tk, Entry, Checkbutton, Button, HORIZONTAL, Label, StringVar, Toplevel, Scrollbar, VERTICAL, E, W, \
     Image
+
+from PIL import ImageTk
 
 
 class View():
@@ -83,6 +86,8 @@ class View():
             img = mpimg.imread('Clustering.png')
             plt.imshow(img)
             plt.show()
+            world_map = Image.open('KMeansWorldMap.png')
+            view_map = ImageTk.PhotoImage(world_map)
             if tkMessageBox.showinfo("K Means Clustering", "The classification processing completed successfully!"):
                 self.root.destroy()
         except:

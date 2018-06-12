@@ -8,7 +8,8 @@ def KMean(df, n_clusters, n_init):
     km.fit(df)
     return km.fit_predict(df)
 
-def show_result(df, clustering):
+
+def save_result(df, clustering):
     for i in range(0, len(clustering)):
         print("{} : {}".format(df.index[i], clustering[i]))
     df1 = df[['Social support']]
@@ -22,7 +23,7 @@ def show_result(df, clustering):
 
     plt.savefig('Clustering.png')
 
-    py.sign_in(username="elichoen", api_key="GwoAb5aLpuUsAlZSdOXb")
+    py.sign_in(username="eliadchoen", api_key="hrqPgkbgjF37f9vUKwtu")
 
     df.reset_index(inplace=True)
     data = [dict(
