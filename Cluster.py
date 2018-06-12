@@ -22,7 +22,7 @@ def save_result(df, path):
 
     plt.savefig(path + 'Clustering.png')
 
-    py.sign_in(username="eliadchoen", api_key="hrqPgkbgjF37f9vUKwtu")
+    py.sign_in(username="alongal", api_key="3F0On3Es6QAJx7XcOTDL")
 
     df.reset_index(inplace=True)
     data = [dict(

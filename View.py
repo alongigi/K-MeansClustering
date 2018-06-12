@@ -1,24 +1,20 @@
-import pickle
-# from tkinter import filedialog
-import os
+
 import tkMessageBox
 from PIL import Image
 
-import matplotlib.image as mpimg
-import matplotlib.pyplot as plt
 
 
 import tkFileDialog
-from Tkinter import Tk, Entry, Checkbutton, Button, HORIZONTAL, Label, StringVar, Toplevel, Scrollbar, VERTICAL, E, W, \
-    Image
+from Tkinter import *
 
-from PIL import ImageTk
+from PIL import Image, ImageTk
 
 
 class View():
     def __init__(self, controller):
         self.controller = controller
         self.root = Tk()
+        self.root.geometry("1250x750")
         self.root.title("K Means Clustering")
         self.file_entry = Entry(self.root)
         self.file_entry['width'] = 50
@@ -28,6 +24,10 @@ class View():
         self.num_of_clusters_entry['width'] = 10
         self.preprocess_btn = Button(text="Pre-process", fg="blue", command=self.pre_process)
         self.cluster_btn = Button(text="Cluster", fg="red", command=self.check_input)
+        self.map_img_lbl = Label(self.root)
+        self.map_img_lbl.grid(row=7, column=1)
+        self.scatter_img_lbl = Label(self.root)
+        self.scatter_img_lbl.grid(row=7, column=2)
         self.create_view()
 
     def start(self):
@@ -84,15 +84,18 @@ class View():
 
     def cluster(self, clusters, runs):
         self.controller.algorithm(clusters, runs)
-        img = mpimg.imread(self.file_path + 'Clustering.png')
-        plt.imshow(img)
-        plt.show()
-        img = mpimg.imread(self.file_path + 'KMeansWorldMap.png')
-        plt.imshow(img)
-        plt.show()
+        map_img = ImageTk.PhotoImage(Image.open(self.file_path + "KMeansWorldMap.png"))
+        self.map_img_lbl['image'] = map_img
+        scatter_img = ImageTk.PhotoImage(Image.open(self.file_path + "Clustering.png"))
+        self.scatter_img_lbl['image'] = scatter_img
+        #img = mpimg.imread(self.file_path + 'Clustering.png')
+        #plt.imshow(img)
+        #plt.show()
+        #img = mpimg.imread(self.file_path + 'KMeansWorldMap.png')
+        #plt.imshow(img)
+        #plt.show()
         if tkMessageBox.showinfo("K Means Clustering", "The classification processing completed successfully!"):
             self.root.destroy()
-
 
     def check_input(self):
         try:
@@ -115,6 +118,7 @@ class View():
                     Input can be only integer!"
                     """
             self.pop_alert(msg)
+
 
     def pop_alert(self, msg):
         '''
