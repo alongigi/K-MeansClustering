@@ -6,12 +6,11 @@ from sklearn.cluster import KMeans
 def KMean(df, n_clusters, n_init):
     km = KMeans(n_clusters=int(n_clusters), n_init=int(n_init))
     km.fit(df)
-    return km.fit_predict(df)
+    df['Clustering'] = km.fit_predict(df)
 
 
-def save_result(df, clustering):
-    for i in range(0, len(clustering)):
-        print("{} : {}".format(df.index[i], clustering[i]))
+def save_result(df, path):
+    clustering = df['Clustering']
     df1 = df[['Social support']]
     df2 = df[['Generosity']]
     t = plt.scatter(df1, df2, c=clustering)
@@ -21,7 +20,7 @@ def save_result(df, clustering):
     plt.title('Generosity depending on social support')
     plt.legend()
 
-    plt.savefig('Clustering.png')
+    plt.savefig(path + 'Clustering.png')
 
     py.sign_in(username="eliadchoen", api_key="hrqPgkbgjF37f9vUKwtu")
 
@@ -47,4 +46,4 @@ def save_result(df, clustering):
     layout = dict(title='KMeans Clustering', geo=dict(showframe=False, showcoastlines=False, projection=dict(type='Mercator')))
     fig = dict(data=data, layout=layout)
     py.iplot(fig, validate=False, filename='world-map')
-    py.image.save_as(fig, filename='KMeansWorldMap.png')
+    py.image.save_as(fig, filename=path + 'KMeansWorldMap.png')

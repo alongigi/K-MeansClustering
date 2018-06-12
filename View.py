@@ -27,7 +27,7 @@ class View():
         self.num_of_clusters_entry = Entry(self.root)
         self.num_of_clusters_entry['width'] = 10
         self.preprocess_btn = Button(text="Pre-process", fg="blue", command=self.pre_process)
-        self.cluster_btn = Button(text="Cluster", fg="red", command=self.cluster)
+        self.cluster_btn = Button(text="Cluster", fg="red", command=self.check_input)
         self.create_view()
 
     def start(self):
@@ -55,15 +55,18 @@ class View():
         self.num_of_clusters_entry.grid(row=2, column=1)
         file_btn.grid(row=1, column=2)
         self.preprocess_btn.grid(row=5, column=1)
+        self.preprocess_btn['state'] = 'disabled'
         self.cluster_btn.grid(row=6, column=1)
+        self.cluster_btn['state'] = 'disabled'
 
     def data_browse_location(self):
         try:
-            file_path = tkFileDialog.askopenfilename(initialdir="/", title="Select file",
+            self.file_path = tkFileDialog.askopenfilename(initialdir="/", title="Select file",
                                                      filetypes=(("xlsx files", "*.xlsx"), ("all files", "*.*")))
-            self.controller.set_path(file_path)
+            self.controller.set_path(self.file_path)
             self.file_entry.delete(0, len(self.file_entry.get()))
-            self.file_entry.insert(0, file_path)
+            self.file_entry.insert(0, self.file_path)
+            self.preprocess_btn['state'] = 'normal'
         except:
             msg = """
             You have to enter excel file.
@@ -72,34 +75,50 @@ class View():
 
     def pre_process(self):
         self.controller.pre_process()
+        self.preprocess_btn['state'] = 'disabled'
+        self.cluster_btn['state'] = 'normal'
         msg = """
         Preprocessing completed successfully!"
         """
         self.pop_alert(msg)
 
-    def cluster(self):
+    def cluster(self, clusters, runs):
+        self.controller.algorithm(clusters, runs)
+        img = mpimg.imread(self.file_path + 'Clustering.png')
+        plt.imshow(img)
+        plt.show()
+        img = mpimg.imread(self.file_path + 'KMeansWorldMap.png')
+        plt.imshow(img)
+        plt.show()
+        if tkMessageBox.showinfo("K Means Clustering", "The classification processing completed successfully!"):
+            self.root.destroy()
+
+
+    def check_input(self):
         try:
-            self.controller.algorithm(self.num_of_clusters_entry.get(), self.nums_of_runs_entry.get())
-            img = mpimg.imread('KMeansWorldMap.png')
-            plt.imshow(img)
-            plt.show()
-            img = mpimg.imread('Clustering.png')
-            plt.imshow(img)
-            plt.show()
-            world_map = Image.open('KMeansWorldMap.png')
-            view_map = ImageTk.PhotoImage(world_map)
-            if tkMessageBox.showinfo("K Means Clustering", "The classification processing completed successfully!"):
-                self.root.destroy()
+            runs = int(self.nums_of_runs_entry.get())
+            clusters = int(self.num_of_clusters_entry.get())
+            if runs > 300 or runs < 1:
+                msg = """
+                        Runs can be between 1 to 300!"
+                        """
+                self.pop_alert(msg)
+            elif clusters < 1 or clusters > self.controller.get_size():
+                msg = """
+                        Clusters can be between 1 to number of records!"
+                        """
+                self.pop_alert(msg)
+            else:
+                self.cluster(clusters, runs)
         except:
             msg = """
-            Please enter only numbers in the 1-300.
-            """
+                    Input can be only integer!"
+                    """
             self.pop_alert(msg)
-
 
     def pop_alert(self, msg):
         '''
         display alert for upload file
         '''
-        tkMessageBox.showinfo(message=msg)
+        tkMessageBox.showinfo("K Means Clustering", message=msg)
         pass

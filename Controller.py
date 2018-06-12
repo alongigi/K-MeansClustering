@@ -6,11 +6,12 @@ import PreProcessing
 class Controller():
 
     def algorithm(self, n_clusters, n_init):
-        clustering = Cluster.KMean(self.df, n_clusters, n_init)
-        Cluster.save_result(self.df, clustering)
+        Cluster.KMean(self.df, n_clusters, n_init)
+        Cluster.save_result(self.df, self.path)
 
     def set_path(self, path):
-        self.df = pd.read_excel(path)
+        self.path = path
+        self.df = pd.read_excel(self.path)
 
     def pre_process(self):
         del self.df['year']
@@ -23,3 +24,8 @@ class Controller():
         t = len(self.df.index)
         return len(self.df.index)
 
+    def showinfo(self):
+        return len(self.df.index)
+
+    def get_size(self):
+        return len(self.df)
