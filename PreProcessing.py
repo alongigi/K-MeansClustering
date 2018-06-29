@@ -47,6 +47,7 @@ def normalize(df):
 
 def kibuz_data(df):
     df = df.groupby("country").mean()
+    df.reset_index(inplace=True)
     return df
 
 def getNumberOfRows(df, feature):
