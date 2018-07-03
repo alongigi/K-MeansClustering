@@ -4,7 +4,7 @@ import plotly.plotly as py
 from sklearn.cluster import KMeans
 
 """
-Responsible for the Kmeans idea as taught in class.
+Responsible for the K-means idea as taught in class.
 :Param {df} the the frame of the program
 :Param {n_clusters} The number of clusters
 :Param {n_init} Num of runs.

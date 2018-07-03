@@ -29,7 +29,7 @@ class Controller():
     """
     Responsible for doing the pre process of the data.
     First filling missing values with its mean with the fillMissingValuesWithMean function
-    Secondly nirmlizing the data with normalize function
+    Secondly normalizing the data with normalize function
     Third making "kibuz data" with kibuz_data function
 
     At every spet the data frame is updated (df - data frame)

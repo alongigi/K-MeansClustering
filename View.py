@@ -9,24 +9,33 @@ from PIL import ImageTk
 The view is responsible for getting the user's input and showing him the results.
 """
 
+"""
+Responsible for popping up a message
+"""
+
+
+def pop_alert(msg):
+    tkMessageBox.showinfo("K Means Clustering", message=msg)
+    pass
+
 
 class View():
     """"""
     """
-    Responsible of initilizing the view.
-    initilizing the root by inilizing instance of TK.
-    initilizing the root title as "K Means clustering"
-    initilizing the entry with ENTRY object with the root
-    initilizing the width of the gui for 50
-    initilizing number of runs entry with the ENTRY object with root
-    initilizing number of runs entry width with value of 10
-    initilizing the number of clusters entry with Entry object with the root
-    initilizing a button for the pre processing
-    initilizing the clustering button.
-    initilizing the map image
-    initilizing the map image label.
-    initilizing the scattered image label
-    initilizing the scattered image label grid
+    Responsible of initializing the view.
+    initializing the root by initializing instance of TK.
+    initializing the root title as "K Means clustering"
+    initializing the entry with ENTRY object with the root
+    initializing the width of the gui for 50
+    initializing number of runs entry with the ENTRY object with root
+    initializing number of runs entry width with value of 10
+    initializing the number of clusters entry with Entry object with the root
+    initializing a button for the pre processing
+    initializing the clustering button.
+    initializing the map image
+    initializing the map image label.
+    initializing the scattered image label
+    initializing the scattered image label grid
     Calling for the view function
 
     Param {controller} the controller
@@ -51,7 +60,7 @@ class View():
         self.create_view()
 
     """
-    start the user interface by runing the main loop function.
+    start the user interface by running the main loop function.
     """
 
     def start(self):
@@ -59,18 +68,18 @@ class View():
 
     '''
     create the view window
-    initilizing the label of data file with the root
-    initilizing the button of browse
-    initilizing the label of number of clusters
+    initializing the label of data file with the root
+    initializing the button of browse
+    initializing the label of number of clusters
     putting the doc label in grid
     putting the cluster label in grid
     putting the run label in grid
     putting the file entry in grid
     putting the number of runs entry in grid
     putting the number of clusters entry in grid
-    initilizing the file button
+    initializing the file button
     putting the processing button in grid
-    Disablign the cluster button in the code
+    Disabling the cluster button in the code
     putting the clustering button in the grid.
     disabling the cluster button
     '''
@@ -94,7 +103,7 @@ class View():
         self.cluster_btn['state'] = 'disabled'
 
     """
-    Resplonsible for getting the location of the excel file
+    Responsible for getting the location of the excel file
     Asking from the user the location of the excel file
     if the user inserts something different than excel pop alert pops with the message "Insert a valid Excel file"
     else inserting to the program the path to the excel file amd switching the process button state to clickable
@@ -109,14 +118,14 @@ class View():
             self.file_entry.insert(0, self.file_path)
             self.preprocess_btn['state'] = 'normal'
         except:
-            self.pop_alert("Insert a valid Excel file")
+            pop_alert("Insert a valid Excel file")
 
     """
     Responsible for the pre processes of the program
     1. asks from the controller to run its method of pre process ('pre_process function')
     2. disabling the process button
     3. enabling the cluster button
-    4. finally poping up a message with the content - 'Preprocessing completed successfully'
+    4. finally popping up a message with the content - 'Preprocessing completed successfully'
     """
 
     def pre_process(self):
@@ -124,9 +133,9 @@ class View():
             self.controller.pre_process()
             self.preprocess_btn['state'] = 'disabled'
             self.cluster_btn['state'] = 'normal'
-            self.pop_alert("Preprocessing completed successfully!")
+            pop_alert("Pre-processing completed successfully!")
         except:
-            self.pop_alert("Insert a valid Excel file, the current is not valid")
+            pop_alert("Insert a valid Excel file, the current is not valid")
 
 
     """
@@ -154,7 +163,7 @@ class View():
 
     """
     Responsible for checking the input
-    parsing th number of the numer of runs and clusters to int
+    parsing the number of runs and clusters to int
     checking if the number of clusters is between 0 to the number of rows of the data frame
     Checking if the number of runs is between 1 to 300
     if all the checks are ok then run the cluster with the number of runs and clustering.
@@ -165,21 +174,10 @@ class View():
             runs = int(self.nums_of_runs_entry.get())
             clusters = int(self.num_of_clusters_entry.get())
             if clusters < 1 or clusters > self.controller.get_size():
-                self.pop_alert("Clusters should be between 1 and number of records!")
+                pop_alert("Clusters should be between 1 and number of records!")
             elif runs > 300 or runs < 1:
-                self.pop_alert("Runs should be between 1 and 300!")
+                pop_alert("Runs should be between 1 and 300!")
             else:
                 self.cluster(clusters, runs)
         except:
-            self.pop_alert("The input should be an integer!")
-
-    """
-    Responsible for poping up a message
-    """
-
-    def pop_alert(self, msg):
-        '''
-        display alert for upload file
-        '''
-        tkMessageBox.showinfo("K Means Clustering", message=msg)
-        pass
+            pop_alert("The input should be an integer!")
